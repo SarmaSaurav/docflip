@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PandocGui</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="main.js" defer></script>
+  </head>
+
+  <body>
+    <div id="drop-overlay" hidden>
+      <div class="drop-overlay-inner">Drop to convert</div>
+    </div>
+
+    <header class="topbar">
+      <h1>Pandoc<span class="accent">Gui</span></h1>
+      <span id="pandoc-status" class="pill pill-warn">checking pandoc…</span>
+    </header>
+
+    <main>
+      <!-- 1. Source file -->
+      <section class="card" id="source-card">
+        <div class="card-head">
+          <h2>Source file</h2>
+          <span id="input-format" class="chip" hidden></span>
+        </div>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button"
+             aria-label="Choose a source file">
+          <p class="dz-hint" id="dz-hint">
+            Drop a file here, or
+            <button type="button" class="link" id="browse-input">browse…</button>
+          </p>
+          <p class="dz-file" id="dz-file" hidden>
+            <span class="dz-name" id="dz-name"></span>
+            <button type="button" class="link subtle" id="clear-input">clear</button>
+          </p>
+        </div>
+      </section>
+
+      <!-- 2. Output -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Output</h2>
+        </div>
+
+        <div class="row">
+          <label class="field">
+            <span>Format</span>
+            <select id="out-format">
+              <option value="docx">Word document (.docx)</option>
+              <option value="gfm" selected>Markdown, GitHub-flavoured (.md)</option>
+              <option value="html">HTML (.html)</option>
+              <option value="latex">LaTeX (.tex)</option>
+              <option value="epub">EPUB (.epub)</option>
+              <option value="odt">OpenDocument text (.odt)</option>
+              <option value="rst">reStructuredText (.rst)</option>
+            </select>
+          </label>
+
+          <label class="field grow">
+            <span>Save to</span>
+            <span class="input-group">
+              <input id="out-path" type="text" spellcheck="false"
+                     placeholder="choose a source file first" />
+              <button type="button" id="browse-output" title="Choose output file">…</button>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 3. Options -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Options</h2>
+        </div>
+
+        <div class="checks">
+          <label class="check">
+            <input type="checkbox" id="opt-wrap" checked />
+            <span>
+              <code>--wrap=none</code>
+              <small>don't hard-wrap lines</small>
+            </span>
+          </label>
+
+          <label class="check">
+            <input type="checkbox" id="opt-standalone" />
+            <span>
+              <code>-s</code>
+              <small>standalone file with headers (tex/html)</small>
+            </span>
+          </label>
+
+          <label class="check">
+            <input type="checkbox" id="opt-toc" />
+            <span>
+              <code>--toc</code>
+              <small>table of contents</small>
+            </span>
+          </label>
+
+          <label class="check" id="check-extract">
+            <input type="checkbox" id="opt-extract" />
+            <span>
+              <code>--extract-media</code>
+              <small>keep images next to the output</small>
+            </span>
+          </label>
+
+          <label class="check check-wide" id="check-refdoc" hidden>
+            <input type="checkbox" id="opt-refdoc" />
+            <span class="refdoc-row">
+              <span>
+                <code>--reference-doc</code>
+                <small>style the output from a template</small>
+              </span>
+              <button type="button" class="link" id="browse-refdoc"
+                      disabled>choose…</button>
+            </span>
+            <small class="refdoc-path" id="refdoc-path" hidden></small>
+          </label>
+        </div>
+      </section>
+
+      <!-- 4. Command preview -->
+      <section class="card preview-card">
+        <div class="card-head">
+          <h2>Command</h2>
+          <button type="button" class="link" id="copy-cmd">copy</button>
+        </div>
+        <pre id="cmd-preview"><code># pick a source file</code></pre>
+      </section>
+
+      <!-- 5. Status -->
+      <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+
+      <div class="actions">
+        <button type="button" id="reveal" class="secondary" hidden>
+          Open output folder
+        </button>
+        <button type="button" id="convert" class="primary" disabled>
+          Convert
+        </button>
+      </div>
+    </main>
+
+    <footer>
+      <span id="foot-hint">Enter converts · powered by pandoc</span>
+    </footer>
+  </body>
+</html>
