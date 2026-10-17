@@ -1,72 +1,151 @@
 # PandocGui
 
-A small, fast, cross-platform desktop GUI for [pandoc](https://pandoc.org/).
-Drop a file, pick an output format, click **Convert** — and see the exact
-pandoc command while you do it.
+**A small, fast desktop GUI for [pandoc](https://pandoc.org/).** Drop a file on the window, pick
+an output format, click Convert — no more remembering flags. The exact pandoc command is shown
+live as you change options, so you learn it while you use it.
 
-See [PLAN.md](PLAN.md) for the full design, scope and roadmap.
+Windows and Linux, one codebase, ~1–2 MB installer, starts instantly.
 
-## What it does (v1)
+![PandocGui screenshot](docs/screenshot.png)
 
-- Drag a file onto the window, or browse with a native dialog
-- Detects the input format from the extension (`.docx`, `.md`, `.tex`,
-  `.html`, `.epub`, `.odt`, `.rst`, …)
-- Output format dropdown; the output path defaults to the same folder with the
-  new extension (and never points at the source file)
-- Options: `--wrap=none`, `-s` standalone, `--toc`, `--extract-media`,
-  `--reference-doc`
-- Live command preview with copy button
-- Shows pandoc's stderr on failure, warnings on success
-- Checks for pandoc on startup and tells you how to install it if missing
-- Asks before overwriting an existing file, then reveals it in the file
-  explorer
+## Highlights
 
-## Prerequisites
+- **Drag and drop** a file onto the window, or browse with a native file dialog
+- **Format detection** from the extension (`.docx`, `.md`, `.tex`, `.html`, `.epub`, `.odt`, `.rst`)
+- **Seven output formats**: Word, Markdown (GitHub-flavoured), HTML, LaTeX, EPUB, OpenDocument, reStructuredText
+- **Sensible defaults per format** — `--extract-media` pre-checked for docx/odt/epub sources, `-s`
+  pre-checked for tex/html, `--reference-doc` offered only where it exists
+- **Live command preview** with a copy button: every flag you toggle is visible before you run it
+- **Honest output**: pandoc's stderr is shown when a conversion fails, warnings when it succeeds
+- **Safe by default**: asks before overwriting, and never points the output at your source file
+- **Knows when pandoc is missing** and tells you the install command for your OS
+- **Open the output folder** in one click after converting
+- Dark mode follows your OS; Enter converts
 
-- Rust (`rustup`) and Node.js
-- Pandoc
-  - Windows: `winget install JohnMacFarlane.Pandoc`
-  - Linux: `sudo apt install pandoc`
-- Linux build deps: `libwebkit2gtk-4.1-dev build-essential libssl-dev
-  libayatana-appindicator3-dev librsvg2-dev`
+## Install
 
-## Develop
+1. Grab the installer from [Releases](../../releases):
+   - `PandocGui_*_x64-setup.exe` (NSIS) or `PandocGui_*_x64_en-US.msi` (Windows Installer)
+2. Install pandoc — PandocGui shells out to it rather than bundling it:
+   - Windows: `winget install JohnMacFarlane.Pandoc`
+   - Linux: `sudo apt install pandoc`
+3. Run PandocGui. A green **pandoc x.y.z** pill in the header means you're ready.
+
+Nothing else is required at runtime: no Node, no Python, no browser install
+(WebView2 ships with Windows 10/11).
+
+## Use
+
+1. Drop a file (or click the drop zone to browse)
+2. Pick the output format — the output path defaults to the same folder with the new extension
+3. Toggle options; the command line below updates as you go
+4. Press **Enter** or click **Convert**
+
+| Option | Flag | When it matters |
+|---|---|---|
+| Wrap | `--wrap=none` | Clean Markdown — no hard-wrapped lines |
+| Standalone | `-s` | Self-contained `.tex`/`.html` with headers instead of a fragment |
+| Table of contents | `--toc` | Long documents in HTML, LaTeX, EPUB |
+| Extract media | `--extract-media=…` | Pulling images out of docx/odt/epub into a folder next to the output |
+| Reference doc | `--reference-doc=…` | Styling the output from your own Word/OpenDocument template |
+
+Output path defaults never overwrite your source: converting `report.docx` to docx writes
+`report-converted.docx`.
+
+## Build from source
+
+Prerequisites: [Rust](https://rustup.rs) (`rustup`), [Node.js](https://nodejs.org) (for the Tauri
+CLI), and pandoc for the tests. On Linux also
+`libwebkit2gtk-4.1-dev build-essential libssl-dev libayatana-appindicator3-dev librsvg2-dev`.
 
 ```sh
+git clone https://github.com/SarmaSaurav/pandocGUI.git
+cd pandocGUI
 npm install
-npm run dev        # tauri dev — live-reloading app window
+
+npm run dev     # app window with rebuild-on-change
+npm run build   # release binary + installers
 ```
 
-## Test
+Bundles land in `src-tauri/target/release/bundle/` (`msi/`, `nsis/`, and on Linux `deb/`,
+`appimage/`). Current sizes: **1.4 MB** NSIS, **2.1 MB** MSI.
 
 ```sh
-cd src-tauri
-cargo test         # includes an end-to-end conversion through real pandoc
+cd src-tauri && cargo test   # 7 tests, including real pandoc conversions
 ```
 
-## Build a bundle
+The tests exercise actual conversions, paths containing spaces and non-ASCII characters, and
+error propagation from pandoc's stderr.
 
-```sh
-npm run build      # src-tauri/target/release + installer for your OS
+## Cut a release
+
+There is no CI yet, so releases are built and uploaded by hand:
+
+1. **Bump the version in three places** — `package.json`, `src-tauri/tauri.conf.json`,
+   `src-tauri/Cargo.toml` — then commit:
+
+   ```sh
+   git commit -am "chore: release v0.2.0"
+   ```
+
+2. **Build the bundles** (Windows and Linux must each be built on their own OS):
+
+   ```sh
+   npm run build
+   ```
+
+3. **Tag and push the tag:**
+
+   ```sh
+   git tag -a v0.2.0 -m "PandocGui v0.2.0"
+   git push origin main v0.2.0
+   ```
+
+4. **Publish the release** — either:
+
+   - **Web UI:** GitHub → *Releases* → *Draft a new release* → pick tag `v0.2.0` → title
+     `PandocGui v0.2.0` → paste release notes → *Attach binaries* and upload from
+     `src-tauri/target/release/bundle/…`
+   - **CLI** (with [GitHub CLI](https://cli.github.com/) installed):
+
+     ```sh
+     gh release create v0.2.0 \
+       src-tauri/target/release/bundle/nsis/PandocGui_0.2.0_x64-setup.exe \
+       src-tauri/target/release/bundle/msi/PandocGui_0.2.0_x64_en-US.msi \
+       --title "PandocGui v0.2.0" --notes "See PLAN.md for the change list."
+     ```
+
+Git tags don't carry binaries — the installers have to be attached to the release itself.
+
+## How it works
+
+```
+┌──────────────────────────┐      invoke("convert")       ┌───────────────────────┐
+│ Frontend (plain HTML/JS) │ ───────────────────────────▶ │ Rust backend          │
+│ drop zone · dropdowns    │                              │ resolves paths        │
+│ options · command preview│ ◀─────────────────────────── │ spawns pandoc         │
+└──────────────────────────┘    Ok(warnings) / Err(stderr)└───────────────────────┘
 ```
 
-## Project layout
+The frontend builds the argument list and renders it as the preview; the backend passes those
+arguments to `std::process::Command` **as a list**, so paths with spaces or non-ASCII characters
+never go through shell quoting. On Windows pandoc is spawned with `CREATE_NO_WINDOW`
+(`0x08000000`) so no console flashes. `src/` is deliberately framework- and bundler-free.
 
 ```
-src/                 frontend: plain HTML/CSS/JS (no framework, no bundler)
-  index.html         layout
-  main.js            state, option handling, Tauri invoke calls
-  styles.css         styling, follows the OS light/dark scheme
+src/                 frontend: index.html, main.js, styles.css
 src-tauri/           Rust backend
-  src/lib.rs         check_pandoc / convert / derive_output / … + tests
+  src/lib.rs         check_pandoc · convert · derive_output · sibling_path · file_exists (+ tests)
   capabilities/      permissions (core, dialog, opener)
   tauri.conf.json    window, bundle, product name
+docs/screenshot.png  README screenshot
+PLAN.md              design, scope, roadmap
 ```
 
-## How the pieces fit
+## Roadmap
 
-The frontend builds the pandoc argument list and shows it as a live preview,
-then passes it to the Rust `convert` command. The backend resolves paths
-(absolute, no quoting bugs — arguments travel as a list, not a string), spawns
-`pandoc <input> -o <output> <args...>` with no console window on Windows, and
-returns stderr for display.
+v1 (MVP) is done. Next up, per [PLAN.md](PLAN.md):
+
+- **v1.1** — pandoc path setting, remember last-used options
+- **v2** — batch conversion, saved presets, bundled pandoc sidecar, PDF output when an engine is
+  detected, GitHub Actions matrix producing installers for every push

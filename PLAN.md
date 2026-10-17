@@ -85,7 +85,7 @@ Alternatives considered: Avalonia (C#, bigger bundle), Python + Tk/PySide (slowe
 - [ ] Bundle pandoc as a Tauri sidecar (`externalBin`, per-platform suffix) so nothing needs installing
 - [ ] PDF output when a LaTeX engine, Typst, or wkhtmltopdf is detected
 - [ ] Shell integration (right-click "Convert with PandocGui")
-- [ ] Dark mode following the OS theme
+- [x] Dark mode following the OS theme
 
 ## Milestones
 
