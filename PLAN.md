@@ -99,7 +99,7 @@ Alternatives considered: Avalonia (C#, bigger bundle), Python + Tk/PySide (slowe
    (`.github/workflows/ci.yml` — tests on every push; `windows-latest` + `ubuntu-24.04` build
    bundles on a `v*` tag and attach them to a draft release; runner pinned ahead of the
    `ubuntu-latest` migration to 26.04.)
-8. **Release**: tag a version, publish artifacts to GitHub Releases.
+8. **Release**: tag a version, publish artifacts to GitHub Releases. ✅\n   (First release `v0.1.0` published 2026-10-17: `.msi` + NSIS `.exe` + `.deb` + `.AppImage`,\n   all built and attached by CI.)
 
 ## Project Structure (expected)
 
