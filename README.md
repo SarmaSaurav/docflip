@@ -6,7 +6,7 @@ live as you change options, so you learn it while you use it.
 
 Windows and Linux, one codebase, ~2 MB installer, starts instantly.
 
-[![CI](https://github.com/SarmaSaurav/pandocGUI/actions/workflows/ci.yml/badge.svg)](https://github.com/SarmaSaurav/pandocGUI/actions/workflows/ci.yml)
+[![CI](https://github.com/SarmaSaurav/docflip/actions/workflows/ci.yml/badge.svg)](https://github.com/SarmaSaurav/docflip/actions/workflows/ci.yml)
 
 ![DocFlip screenshot](docs/screenshot.png)
 
