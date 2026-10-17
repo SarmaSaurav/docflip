@@ -1,4 +1,4 @@
-# PandocGui: Project Plan
+# DocFlip: Project Plan
 
 A small, fast, cross-platform (Windows + Linux) desktop GUI for [pandoc](https://pandoc.org/). Drop a file, pick an output format, click Convert. No more remembering commands.
 
@@ -84,7 +84,7 @@ Alternatives considered: Avalonia (C#, bigger bundle), Python + Tk/PySide (slowe
 - [ ] Saved presets (e.g. "docx to clean md with media")
 - [ ] Bundle pandoc as a Tauri sidecar (`externalBin`, per-platform suffix) so nothing needs installing
 - [ ] PDF output when a LaTeX engine, Typst, or wkhtmltopdf is detected
-- [ ] Shell integration (right-click "Convert with PandocGui")
+- [ ] Shell integration (right-click "Convert with DocFlip")
 - [x] Dark mode following the OS theme
 
 ## Milestones
@@ -104,7 +104,7 @@ Alternatives considered: Avalonia (C#, bigger bundle), Python + Tk/PySide (slowe
 ## Project Structure (expected)
 
 ```
-pandoc-gui/
+docflip/
 ├── PLAN.md
 ├── package.json
 ├── src/                    # frontend

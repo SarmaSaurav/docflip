@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E9EFFA"/>
+    </linearGradient>
+    <filter id="pageShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="26" stdDeviation="30" flood-color="#0B1B3A" flood-opacity="0.45"/>
+    </filter>
+    <filter id="badgeShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#0B1B3A" flood-opacity="0.40"/>
+    </filter>
+  </defs>
+
+  <!-- app tile -->
+  <rect x="0" y="0" width="1024" height="1024" rx="230" fill="url(#bg)"/>
+
+  <!-- document with a cut corner -->
+  <g filter="url(#pageShadow)">
+    <path d="M326 214 h292 l132 132 v446 a52 52 0 0 1 -52 52 H326 a52 52 0 0 1 -52 -52 V266 a52 52 0 0 1 52 -52 z"
+          fill="url(#paper)"/>
+    <!-- folded corner flap -->
+    <path d="M618 214 L750 346 L618 346 Z" fill="#C7D2FE"/>
+    <!-- text lines -->
+    <rect x="330" y="430" width="340" height="36" rx="18" fill="#8FA3BF"/>
+    <rect x="330" y="516" width="270" height="36" rx="18" fill="#A9B8CC"/>
+    <rect x="330" y="602" width="200" height="36" rx="18" fill="#C2CEDD"/>
+  </g>
+
+  <!-- conversion badge: circular arrow -->
+  <g filter="url(#badgeShadow)">
+    <circle cx="734" cy="742" r="152" fill="#FFFFFF"/>
+  </g>
+  <g transform="translate(734,742)">
+    <path d="M 49 -84.9 A 98 98 0 1 1 -49 -84.9"
+          fill="none" stroke="#F59E0B" stroke-width="44" stroke-linecap="round"/>
+    <g transform="translate(-49,-84.9) rotate(-30)">
+      <polygon points="64,0 -30,-40 -30,40" fill="#F59E0B"/>
+    </g>
+  </g>
+</svg>

@@ -33,7 +33,7 @@ fn not_found_message(program: &str) -> String {
     if program == "pandoc" {
         format!(
             "Pandoc was not found on PATH. Install it with `{INSTALL_HINT_WIN}` (Windows) \
-             or `{INSTALL_HINT_LINUX}` (Linux), then restart PandocGui."
+             or `{INSTALL_HINT_LINUX}` (Linux), then restart DocFlip."
         )
     } else {
         format!("Could not start `{program}`. Check the pandoc path in the app settings.")

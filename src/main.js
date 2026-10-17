@@ -1,4 +1,4 @@
-// PandocGui frontend.
+// DocFlip frontend.
 //
 // The frontend owns the argument list: it shows it live and hands it to the
 // Rust side, which only resolves paths and spawns `pandoc`.

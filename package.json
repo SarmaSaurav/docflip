@@ -1,5 +1,5 @@
 {
-  "name": "pandoc-gui",
+  "name": "docflip",
   "private": true,
   "version": "0.1.0",
   "description": "Small, fast desktop GUI for pandoc: drop a file, pick a format, convert.",
