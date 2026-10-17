@@ -89,13 +89,16 @@ Alternatives considered: Avalonia (C#, bigger bundle), Python + Tk/PySide (slowe
 
 ## Milestones
 
-1. **Scaffold**: `npm create tauri-app@latest` (vanilla JS), confirm `npm run tauri dev` runs on both OSes.
-2. **Backend**: `convert` command working from a hardcoded call; verify the Windows no-console flag.
-3. **UI**: layout, dropdowns, option checkboxes, command preview.
-4. **Wiring**: browse dialog, drag-and-drop, extension-based format detection, default output path.
-5. **Error handling**: pandoc-not-found message, stderr display, overwrite check.
-6. **Polish**: window size, icon, app name, keyboard shortcuts (Enter to convert).
-7. **CI**: GitHub Actions matrix (`windows-latest`, `ubuntu-latest`) producing `.msi`/`.exe` and `.deb`/`.AppImage`.
+1. **Scaffold**: `npm create tauri-app@latest` (vanilla JS), confirm `npm run tauri dev` runs on both OSes. ✅
+2. **Backend**: `convert` command working from a hardcoded call; verify the Windows no-console flag. ✅
+3. **UI**: layout, dropdowns, option checkboxes, command preview. ✅
+4. **Wiring**: browse dialog, drag-and-drop, extension-based format detection, default output path. ✅
+5. **Error handling**: pandoc-not-found message, stderr display, overwrite check. ✅
+6. **Polish**: window size, icon, app name, keyboard shortcuts (Enter to convert). ✅
+7. **CI**: GitHub Actions matrix producing `.msi`/`.exe` and `.deb`/`.AppImage`. ✅
+   (`.github/workflows/ci.yml` — tests on every push; `windows-latest` + `ubuntu-24.04` build
+   bundles on a `v*` tag and attach them to a draft release; runner pinned ahead of the
+   `ubuntu-latest` migration to 26.04.)
 8. **Release**: tag a version, publish artifacts to GitHub Releases.
 
 ## Project Structure (expected)
