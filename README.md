@@ -6,6 +6,8 @@ live as you change options, so you learn it while you use it.
 
 Windows and Linux, one codebase, ~1–2 MB installer, starts instantly.
 
+[![CI](https://github.com/SarmaSaurav/pandocGUI/actions/workflows/ci.yml/badge.svg)](https://github.com/SarmaSaurav/pandocGUI/actions/workflows/ci.yml)
+
 ![PandocGui screenshot](docs/screenshot.png)
 
 ## Highlights
@@ -79,43 +81,57 @@ error propagation from pandoc's stderr.
 
 ## Cut a release
 
-There is no CI yet, so releases are built and uploaded by hand:
+CI does the building — no Linux machine or Windows box required, GitHub's hosted runners handle
+it (`.github/workflows/ci.yml`):
+
+- **every push to `main`** → the Linux runner installs the WebKitGTK dependencies and runs
+  `cargo test` against a real pandoc
+- **every `v*` tag** → after the tests pass, a matrix builds `.deb` + `.AppImage` on
+  `ubuntu-latest` and `.msi` + NSIS `-setup.exe` on `windows-latest`, then attaches all four
+  binaries to a **draft** release
+
+Cutting one:
 
 1. **Bump the version in three places** — `package.json`, `src-tauri/tauri.conf.json`,
-   `src-tauri/Cargo.toml` — then commit:
+   `src-tauri/Cargo.toml` — and commit:
 
    ```sh
    git commit -am "chore: release v0.2.0"
    ```
 
-2. **Build the bundles** (Windows and Linux must each be built on their own OS):
-
-   ```sh
-   npm run build
-   ```
-
-3. **Tag and push the tag:**
+2. **Tag and push:**
 
    ```sh
    git tag -a v0.2.0 -m "PandocGui v0.2.0"
    git push origin main v0.2.0
    ```
 
-4. **Publish the release** — either:
+3. **Watch the run** in the *Actions* tab — ~10–15 min on a cold cache, faster afterwards.
 
-   - **Web UI:** GitHub → *Releases* → *Draft a new release* → pick tag `v0.2.0` → title
-     `PandocGui v0.2.0` → paste release notes → *Attach binaries* and upload from
-     `src-tauri/target/release/bundle/…`
-   - **CLI** (with [GitHub CLI](https://cli.github.com/) installed):
+4. **Publish the draft** the workflow produced: *Releases* → `PandocGui v0.2.0` (Draft) → check
+   the notes and the four attached binaries → **Publish release**.
 
-     ```sh
-     gh release create v0.2.0 \
-       src-tauri/target/release/bundle/nsis/PandocGui_0.2.0_x64-setup.exe \
-       src-tauri/target/release/bundle/msi/PandocGui_0.2.0_x64_en-US.msi \
-       --title "PandocGui v0.2.0" --notes "See PLAN.md for the change list."
-     ```
+Git tags don't carry binaries — the bundles ride on the release, which is why CI attaches them
+before you publish.
 
-Git tags don't carry binaries — the installers have to be attached to the release itself.
+### Building bundles by hand
+
+Alternative to CI: run this on each OS you want to ship for
+
+```sh
+npm run build
+```
+
+Output lands in `src-tauri/target/release/bundle/` — `msi/` + `nsis/` on Windows, `deb/` +
+`appimage/` on Linux (a `.deb` cannot be built on Windows). Attach the files on the release
+page, or with [GitHub CLI](https://cli.github.com/):
+
+```sh
+gh release create v0.2.0 \
+  src-tauri/target/release/bundle/nsis/PandocGui_0.2.0_x64-setup.exe \
+  src-tauri/target/release/bundle/msi/PandocGui_0.2.0_x64_en-US.msi \
+  --title "PandocGui v0.2.0"
+```
 
 ## How it works
 
@@ -148,4 +164,4 @@ v1 (MVP) is done. Next up, per [PLAN.md](PLAN.md):
 
 - **v1.1** — pandoc path setting, remember last-used options
 - **v2** — batch conversion, saved presets, bundled pandoc sidecar, PDF output when an engine is
-  detected, GitHub Actions matrix producing installers for every push
+  detected

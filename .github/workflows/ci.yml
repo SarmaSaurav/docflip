@@ -14,7 +14,7 @@ permissions:
 jobs:
   test:
     name: Tests (Linux)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: ubuntu-latest
+          - platform: ubuntu-24.04
             bundles: deb,appimage
           - platform: windows-latest
             bundles: msi,nsis
@@ -58,7 +58,7 @@ jobs:
           cache: npm
 
       - name: Install system dependencies (Linux)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-24.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -93,3 +93,4 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: --bundles ${{ matrix.bundles }}
+
